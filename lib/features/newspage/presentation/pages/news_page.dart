@@ -2,7 +2,7 @@ import 'package:flavour_clean_bloc/core/config/app_size_util.dart';
 import 'package:flavour_clean_bloc/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../common/presentation/language_dialog_box.dart';
+import '../../../../common/features/multilngual/presentation/pages/language_dialog_box.dart';
 
 class NewsPage extends StatefulWidget {
   const NewsPage({super.key});

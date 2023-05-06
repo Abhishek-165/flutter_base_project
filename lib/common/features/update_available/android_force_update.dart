@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:move_to_background/move_to_background.dart';
-import 'package:store_redirect/store_redirect.dart';
 
-import '../../../../core/utils/common_exports.dart';
+import '../../../core/theme/app_colors.dart';
 
-class IOSForceUpdate extends StatelessWidget {
-  const IOSForceUpdate({Key? key}) : super(key: key);
+class AndroidForceUpdateAvailble extends StatelessWidget {
+  const AndroidForceUpdateAvailble({
+    Key? key,
+  }) : super(key: key);
 
-  Future<bool> onIOSForceUpdateWillScrope(context) async {
+  Future<bool> _onWillPop2(context) async {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -19,7 +21,7 @@ class IOSForceUpdate extends StatelessWidget {
             style: TextStyle(
               // fontFamily: 'Montserrat',
               fontWeight: FontWeight.bold,
-              color: AppColors.appGrey,
+              color: AppColors.appPurple,
               fontSize: 16,
             ),
           ),
@@ -39,7 +41,7 @@ class IOSForceUpdate extends StatelessWidget {
                 child: Text(
                   'Yes',
                   style: TextStyle(
-                    color: AppColors.appPurple,
+                    color: AppColors.appWhite,
                     fontSize: 17,
                     // fontFamily: 'Montserrat',
                     fontWeight: FontWeight.w700,
@@ -69,15 +71,36 @@ class IOSForceUpdate extends StatelessWidget {
     return false;
   }
 
+  showUpdateDialog(context) {
+    InAppUpdate.checkForUpdate().then((value) {
+      if (value.updateAvailability == UpdateAvailability.updateAvailable) {
+        InAppUpdate.performImmediateUpdate().then((value) {
+          if (value == AppUpdateResult.success) {
+            Navigator.pop(context);
+          } else {
+            showUpdateDialog(context);
+          }
+        }).catchError((exception, s) {
+          //      bugsnag.notify(exception, s);
+        });
+      }
+    }).catchError((exception, s) {
+      //  bugsnag.notify(exception, s);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => onIOSForceUpdateWillScrope(context),
+      onWillPop: () => _onWillPop2(context),
       child: Container(
         decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -111,7 +134,6 @@ class IOSForceUpdate extends StatelessWidget {
                 'A new version of app is available with better features',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  // fontFamily: 'Montserrat',
                   color: AppColors.appPurple,
                   fontSize: 12,
                 ),
@@ -128,11 +150,7 @@ class IOSForceUpdate extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () async {
-                        StoreRedirect.redirect(
-                          androidAppId: 'org.example.projectName',
-                          iOSAppId: 'iosAppID',
-                        );
-                        Navigator.pop(context);
+                        showUpdateDialog(context);
                       },
                       child: Container(
                         height: 40,

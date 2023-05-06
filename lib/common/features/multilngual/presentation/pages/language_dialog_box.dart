@@ -1,6 +1,11 @@
+import 'package:flavour_clean_bloc/common/features/multilngual/data/local_language.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_colors.dart';
+import '../../data/language.dart';
+import '../bloc/language_bloc.dart';
+import '../bloc/language_event.dart';
 
 class LanguageDialogBox extends StatefulWidget {
   const LanguageDialogBox({super.key});
@@ -10,11 +15,17 @@ class LanguageDialogBox extends StatefulWidget {
 }
 
 class _LanguageDialogBoxState extends State<LanguageDialogBox> {
-  String languageValue = 'English';
+  String languageValue = 'en';
+
+  @override
+  void initState() {
+    super.initState();
+    languageValue = LocalLanguage.getInstance().readValue() ?? 'en';
+  }
 
   setNewLanguage(String? newLanguage) {
     setState(() {
-      languageValue = newLanguage ?? 'English';
+      languageValue = newLanguage ?? 'en';
     });
   }
 
@@ -45,7 +56,7 @@ class _LanguageDialogBoxState extends State<LanguageDialogBox> {
                     AppColors.appGrey,
                   ),
                   activeColor: AppColors.appPurple,
-                  value: "English",
+                  value: "en",
                   onChanged: setNewLanguage,
                   groupValue: languageValue,
                 ),
@@ -58,7 +69,7 @@ class _LanguageDialogBoxState extends State<LanguageDialogBox> {
                     AppColors.appGrey,
                   ),
                   activeColor: AppColors.appPurple,
-                  value: "Hindi",
+                  value: "hi",
                   onChanged: setNewLanguage,
                   groupValue: languageValue,
                 ),
@@ -112,7 +123,17 @@ class _LanguageDialogBoxState extends State<LanguageDialogBox> {
                     textAlign: TextAlign.center,
                   ),
                   onPressed: () {
-                    //  context.appLocalization.localeName = Locale('hi');
+                    LanguageBloc languageChangeBloc =
+                        BlocProvider.of<LanguageBloc>(context);
+
+                    languageChangeBloc.add(
+                      ChangeLanguage(
+                        selectedLanguage: languageValue == "en"
+                            ? Language.english
+                            : Language.hindi,
+                      ),
+                    );
+                    Navigator.pop(context);
                   },
                 ),
               )

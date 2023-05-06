@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'common/features/multilngual/presentation/bloc/language_bloc.dart';
+import 'common/features/multilngual/presentation/bloc/language_event.dart';
 import 'core/config/app_size_util.dart';
 import 'features/newspage/presentation/pages/news_page.dart';
 
@@ -20,15 +23,21 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        localeResolutionCallback: (
-          locale,
-          supportedLocales,
-        ) {
-          return locale;
-        },
-        home: const NewsPage());
+    return BlocProvider(
+        create: (context) => LanguageBloc()..add(GetLanguage()),
+        child:
+            BlocBuilder<LanguageBloc, LanguageState>(builder: (context, state) {
+          return MaterialApp(
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              locale: state.selectedLanguage.value,
+              localeResolutionCallback: (
+                locale,
+                supportedLocales,
+              ) {
+                return locale;
+              },
+              home: const NewsPage());
+        }));
   }
 }

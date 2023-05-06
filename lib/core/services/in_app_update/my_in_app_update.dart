@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:version/version.dart';
 
-import '../../../common/presentation/pages/update_available/android_force_update.dart';
-import '../../../common/presentation/pages/update_available/android_update_availlable.dart';
-import '../../../common/presentation/pages/update_available/ios_force_update.dart';
-import '../../../common/presentation/pages/update_available/ios_update_available.dart';
+import '../../../common/features/update_available/android_force_update.dart';
+import '../../../common/features/update_available/android_update_availlable.dart';
+import '../../../common/features/update_available/ios_force_update.dart';
+import '../../../common/features/update_available/ios_update_available.dart';
 
 abstract class MyInAppUpdate {
   Future<bool> ifForceAndroidUpdateRequired();

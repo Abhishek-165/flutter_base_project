@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:store_redirect/store_redirect.dart';
 
-import '../../../../core/utils/common_exports.dart';
+import '../../../core/utils/common_exports.dart';
 
 class IOSUpdateAvailable extends StatelessWidget {
   const IOSUpdateAvailable({Key? key}) : super(key: key);
